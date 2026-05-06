@@ -7,7 +7,7 @@ import { Model } from 'mongoose';
 export class PaymentService {
   constructor(
     @InjectModel(Payment.name) private paymentModel: Model<Payment>,
-  ) {}
+  ) { }
 
   // async processPayment(data: any) {
   //   // Dummy logic: always success

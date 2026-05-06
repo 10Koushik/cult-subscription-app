@@ -6,26 +6,21 @@ function App() {
   const [userId, setUserId] = useState('');
   const [message, setMessage] = useState('');
 
-  // LOGIN
   const handleLogin = async () => {
     try {
       const res = await API.post('/auth/login', {
         userId,
         email,
       });
-      console.log(userId);
-      console.log(email);
-
       localStorage.setItem('token', res.data.access_token);
-      console.log("token",res.data.access_token);
-      
+      console.log("✅ Token:", res.data.access_token);
       setMessage('✅ Login successful');
     } catch (err) {
+      console.log(err.response?.data || err.message);
       setMessage('❌ Login failed');
     }
   };
 
-  // SUBSCRIBE
   const handleSubscribe = async () => {
     try {
       const res = await API.post('/subscription/subscribe', {
@@ -35,33 +30,35 @@ function App() {
         email,
       });
 
+      console.log("Subscription Response:", res.data);
       setMessage(res.data.message);
+      if (res.data.previewUrl) {
+        window.open(res.data.previewUrl, '_blank');
+      }
     } catch (err) {
+      console.log(err.response?.data || err.message);
       setMessage('❌ Subscription failed');
     }
   };
-
   return (
     <div style={{ padding: 20 }}>
       <h2>Cult Subscription App</h2>
 
       <input
         placeholder="User ID"
+        value={userId}
         onChange={(e) => setUserId(e.target.value)}
       />
       <br /><br />
-
       <input
         placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <br /><br />
-
       <button onClick={handleLogin}>Login</button>
       <br /><br />
-
       <button onClick={handleSubscribe}>Subscribe</button>
-
       <h3>{message}</h3>
     </div>
   );
